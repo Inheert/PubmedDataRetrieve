@@ -1,0 +1,375 @@
+1655191248707	geckodriver	INFO	Listening on 127.0.0.1:43195
+1655191249214	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "41697" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileNUSNp9"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191249903	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileNUSNp9/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:41697/devtools/browser/45b58503-47c5-44a1-846a-689aecec2c5c
+1655191251419	Marionette	INFO	Listening on port 37617
+Read port: 37617
+1655191251532	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1655191251548	Marionette	INFO	Stopped listening on port 37617
+1655191273117	geckodriver	INFO	Listening on 127.0.0.1:58203
+1655191273621	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "33381" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileJ389rP"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191274307	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJ389rP/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:33381/devtools/browser/aa38f844-4c94-4c45-924e-1b7f568eff4c
+1655191275636	Marionette	INFO	Listening on port 38323
+Read port: 38323
+1655191275737	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1655191275750	Marionette	INFO	Stopped listening on port 38323
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655191388480	geckodriver	INFO	Listening on 127.0.0.1:33035
+1655191388983	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "47847" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileKfixD8"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191389712	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileKfixD8/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:47847/devtools/browser/2c0c8c31-3753-4cfc-b659-c759e489cfa0
+1655191391077	Marionette	INFO	Listening on port 35809
+Read port: 35809
+1655191391103	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191392898, line 550: unreachable code after return statement
+1655191406787	geckodriver	INFO	Listening on 127.0.0.1:54621
+1655191407290	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "34539" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileljaPHR"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191408033	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileljaPHR/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:34539/devtools/browser/8789babf-d2a3-40b9-9eba-c5bc8a870eea
+1655191409512	Marionette	INFO	Listening on port 39765
+Read port: 39765
+1655191409608	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1655191411626	Marionette	INFO	Stopped listening on port 35809
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191412795, line 550: unreachable code after return statement
+1655191444195	geckodriver	INFO	Listening on 127.0.0.1:54593
+1655191444699	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "58861" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofiler0cE4T"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191445403	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofiler0cE4T/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:58861/devtools/browser/1b78f8e7-da41-4882-9100-5c53cc3df926
+1655191446778	Marionette	INFO	Listening on port 38705
+Read port: 38705
+1655191446817	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191448418, line 550: unreachable code after return statement
+JavaScript error: , line 0: uncaught exception: null
+1655191619331	geckodriver	INFO	Listening on 127.0.0.1:47837
+1655191619837	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "43639" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilexf802Q"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191620548	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilexf802Q/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:43639/devtools/browser/6a1888c8-4b51-4453-a277-89a2db35deef
+1655191621896	Marionette	INFO	Listening on port 39975
+Read port: 39975
+1655191621965	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191623573, line 550: unreachable code after return statement
+1655191627983	Marionette	INFO	Stopped listening on port 39975
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 575: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 575: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 575: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 575: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1655191630596	Marionette	INFO	Stopped listening on port 39765
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655191632240	Marionette	INFO	Stopped listening on port 38705
+
+###!!! [Child][PContentChild] Error: RunMessage(msgname=PHttpChannel::Msg_DeleteSelf) Channel closing: too late to send/recv, messages will be lost
+
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655191685538	geckodriver	INFO	Listening on 127.0.0.1:44089
+1655191686042	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "42453" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileYUXdUE"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191686951	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileYUXdUE/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:42453/devtools/browser/37e1659e-bf5f-4f03-b942-30b8cfdfa1f4
+1655191688536	Marionette	INFO	Listening on port 35759
+Read port: 35759
+1655191688568	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191690493, line 550: unreachable code after return statement
+1655191703396	geckodriver	INFO	Listening on 127.0.0.1:52243
+1655191703901	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "52191" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileqKd44h"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191704774	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileqKd44h/search.json.mozlz4", (void 0)))
+1655191705684	Marionette	INFO	Stopped listening on port 35759
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+DevTools listening on ws://localhost:52191/devtools/browser/a0b91f94-de26-4468-b0be-4363dc3ea8f4
+1655191706331	Marionette	INFO	Listening on port 36371
+Read port: 36371
+1655191706420	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191707842, line 550: unreachable code after return statement
+1655191709386	Marionette	INFO	Stopped listening on port 36371
+JavaScript error: resource://gre/modules/UrlClassifierListManager.jsm, line 691: TypeError: this.tablesData[table] is undefined
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655191846393	geckodriver	INFO	Listening on 127.0.0.1:33773
+1655191846900	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "60159" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilepO8jyh"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655191847617	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilepO8jyh/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:60159/devtools/browser/689ffac9-d644-43da-8416-85b3bf98842a
+1655191848946	Marionette	INFO	Listening on port 43557
+Read port: 43557
+1655191849017	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655191852224, line 550: unreachable code after return statement
+1655191854128	Marionette	INFO	Stopped listening on port 43557
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655192452044	geckodriver	INFO	Listening on 127.0.0.1:32929
+1655192452549	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "48031" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilemfxQUV"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655192453253	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilemfxQUV/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:48031/devtools/browser/666a8ce6-01c6-431f-806b-cd4036581534
+1655192454674	Marionette	INFO	Listening on port 42069
+Read port: 42069
+1655192454766	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655192456456, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655192464149	Marionette	INFO	Stopped listening on port 42069
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655192619260	geckodriver	INFO	Listening on 127.0.0.1:34791
+1655192619763	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "download.default_directory=testSave" "--remote-debugging-port" "44119" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileRpi2Aj"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655192620479	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileRpi2Aj/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:44119/devtools/browser/081b66c9-81d7-4f66-9242-0040c7f86bec
+1655192622073	Marionette	INFO	Listening on port 42853
+Read port: 42853
+1655192622180	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655192623776, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655192630439	Marionette	INFO	Stopped listening on port 42853
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655192673037	geckodriver	INFO	Listening on 127.0.0.1:43611
+1655192673542	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "download.default_directory=testSave" "--remote-debugging-port" "57347" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile0gDCCq"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655192674280	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile0gDCCq/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:57347/devtools/browser/cb646328-05ad-4bd2-888d-25cf88752a1a
+1655192675782	Marionette	INFO	Listening on port 34921
+Read port: 34921
+1655192675860	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1655192705845	geckodriver	INFO	Listening on 127.0.0.1:56721
+1655192706351	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "download.default_directory=/home/inheert/PycharmProjects/test/testSave" "--remote-debugging-port" "60313" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileLBfBvK"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655192707068	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileLBfBvK/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:60313/devtools/browser/5bbd5a19-358f-4593-bc7a-49cb3b45581c
+1655192708681	Marionette	INFO	Listening on port 43661
+Read port: 43661
+1655192708768	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655192710342, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655192717072	Marionette	INFO	Stopped listening on port 43661
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655192988507	geckodriver	INFO	Listening on 127.0.0.1:36851
+1655192989010	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "39995" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilesJFNyY"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655192989708	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilesJFNyY/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:39995/devtools/browser/bd3dc5e4-f348-4b89-94fc-48de1d477263
+1655192991116	Marionette	INFO	Listening on port 40843
+Read port: 40843
+1655192991229	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655192992774, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655193000025	Marionette	INFO	Stopped listening on port 40843
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655193466190	geckodriver	INFO	Listening on 127.0.0.1:56597
+1655193466696	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "53669" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileqkcDrg"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655193467237	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileqkcDrg/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53669/devtools/browser/8efad6c8-d236-4e6e-b889-d7f09c4e6c1a
+1655193468108	Marionette	INFO	Listening on port 40391
+Read port: 40391
+1655193468220	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655193469714, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655193477081	Marionette	INFO	Stopped listening on port 40391
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
+1655193864137	geckodriver	INFO	Listening on 127.0.0.1:37457
+1655193864643	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "53215" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilekWC3bp"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655193865197	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilekWC3bp/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53215/devtools/browser/ed5ff4ad-9846-484d-9396-2e4f0052d7b0
+1655193866101	Marionette	INFO	Listening on port 39507
+Read port: 39507
+1655193866175	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: , line 0: uncaught exception: null
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655193867845, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+JavaScript error: https://zndikywqsjiuwn0q5-nlmenterprise.siteintercept.qualtrics.com/SIE/?Q_ZID=ZN_dikYWqsjiUWN0Q5, line 3: Error: Loading chunk 1 failed.
+(error: https://siteintercept.qualtrics.com/dxjsmodule/1.a39b2e9810c20f912e78.chunk.js?Q_CLIENTVERSION=1.73.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise)
+JavaScript error: https://zndikywqsjiuwn0q5-nlmenterprise.siteintercept.qualtrics.com/SIE/?Q_ZID=ZN_dikYWqsjiUWN0Q5, line 3: Error: Loading chunk 1 failed.
+(error: https://siteintercept.qualtrics.com/dxjsmodule/1.a39b2e9810c20f912e78.chunk.js?Q_CLIENTVERSION=1.73.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise)
+JavaScript error: https://zndikywqsjiuwn0q5-nlmenterprise.siteintercept.qualtrics.com/SIE/?Q_ZID=ZN_dikYWqsjiUWN0Q5, line 3: Error: Loading chunk 4 failed.
+(error: https://siteintercept.qualtrics.com/dxjsmodule/4.ad3e9bacd6f5e610542b.chunk.js?Q_CLIENTVERSION=1.73.0&Q_CLIENTTYPE=web&Q_BRANDID=nlmenterprise)
+1655193877704	Marionette	INFO	Stopped listening on port 39507
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655193947301	geckodriver	INFO	Listening on 127.0.0.1:50671
+1655193947807	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "58543" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileu1QCH1"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655193948380	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileu1QCH1/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:58543/devtools/browser/e24039a9-9878-419a-b543-06f3faf6c763
+1655193949434	Marionette	INFO	Listening on port 34687
+Read port: 34687
+1655193949520	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655193951109, line 550: unreachable code after return statement
+JavaScript error: , line 0: uncaught exception: null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+1655193958064	Marionette	INFO	Stopped listening on port 34687
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1655193993227	geckodriver	INFO	Listening on 127.0.0.1:34191
+1655193993729	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "55755" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileYBjKL4"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1655193994264	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileYBjKL4/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55755/devtools/browser/1062d319-587f-45bb-abbf-3934216f562f
+1655193995232	Marionette	INFO	Listening on port 45853
+Read port: 45853
+1655193995361	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript warning: https://www.ncbi.nlm.nih.gov/core/alerts/alerts.js?_=1655193997397, line 550: unreachable code after return statement
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://pubmed.ncbi.nlm.nih.gov"
+JavaScript error: , line 0: uncaught exception: null
+1655194064909	Marionette	INFO	Stopped listening on port 45853
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+Sandbox: Unexpected EOF, op 0 flags 00 path /proc/cpuinfo
