@@ -1,15 +1,12 @@
-import pandas as pd
-from Pubmed import Pubmed
 from PubmedGroup import PubmedGroup
+"""
+heroku chrome: 
+https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-google-chrome
 
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import ElementClickInterceptedException
-import re
+Améliorer la gestion probable des erreurs :
+    - np articles pb != np articles dataframe
+    - 
+"""
 
 # first = Pubmed("hyperthyroidie")
 # first.RetrieveArticles()

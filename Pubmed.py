@@ -26,8 +26,8 @@ class Pubmed:
     tag_translation = {"AB": "Abstract", "AD": "Affiliation", "AID": "Article_identifier",
                        "DP": "Publication_date", "FAU": "Full_author_name", "IR": "Investigator",
                        "JT": "Full_journal", "MH": "Mesh_terms", "OT": "Other_term",
-                       "PL": "Place_of_pulication", "PMID": "PMID", "PT": "Pulbication_type",
-                       "RN": "EC/RN_number", "TI": "Title"}
+                       "PL": "Place_of_publication", "PMID": "PMID", "PT": "Publication_type",
+                       "RN": "EC_RN_number", "TI": "Title"}
 
     def __init__(self, keyword: str):
         os.environ["GH_TOKEN"] = "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"
@@ -153,7 +153,7 @@ class Pubmed:
                         else:
                             pass
                     else:
-                        article_dictionary[name_tag] += tag[1] if len(article_dictionary[name_tag]) < 1 else "$#$" + \
+                        article_dictionary[name_tag] += tag[1] if len(article_dictionary[name_tag]) < 1 else "---" + \
                                                                                                              tag[1]
                         last_tag = name_tag
 
