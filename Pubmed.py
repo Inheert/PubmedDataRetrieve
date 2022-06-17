@@ -2,7 +2,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementClickInterceptedException, ElementNotInteractableException, NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 import os
@@ -27,7 +27,7 @@ class Pubmed:
                        "DP": "Publication_date", "FAU": "Full_author_name", "IR": "Investigator",
                        "JT": "Full_journal", "MH": "Mesh_terms", "OT": "Other_term",
                        "PL": "Place_of_publication", "PMID": "PMID", "PT": "Publication_type",
-                       "RN": "EC_RN_number", "TI": "Title"}
+                       "RN": "Chemical", "TI": "Title"}
 
     def __init__(self, keyword: str):
         os.environ["GH_TOKEN"] = "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"
@@ -46,21 +46,6 @@ class Pubmed:
         prefs = {"download.default_directory": self.directory}
         self.options.add_experimental_option("prefs", prefs)
 
-    @staticmethod
-    def MeshTermsSelection(pathologie: str):
-        pathologie = pathologie.lower().strip()
-
-        if pathologie == "hyperthyroidie":
-            return "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])"
-        elif pathologie == "hypothyroidie":
-            return "(((((((((((hypothyroidism[MeSH Terms]) OR (hypothyroidism[Text Word])) OR (congenital hypothyroidism[MeSH Terms])) OR (cretinism[Text Word])) OR (congenital iodine deficiency syndrome[Text Word])) OR (lingual thyroid[MeSH Terms])) OR (thyroid dysgenesis[Text Word])) OR (lingual thyroid[Text Word])) OR (thyroid lingual[Text Word])) OR (lingual goiter[MeSH Terms])) OR (lingual goiter[Text Word])) OR (goiter lingual[Text Word])"
-        elif pathologie == "goitre":
-            return "((goiter[MeSH Terms]) OR (goiter[Text Word]) OR (goiters[Text Word])) OR ((goiter, nodular[MeSH Terms]) OR (nodular goiters[Text Word]) OR (nodular goiter[Text Word]) OR (goiter, nodular[Text Word]))"
-        elif pathologie == "thyroidites":
-            return "(((((((((((thyroiditis, autoimmune[MeSH Terms]) OR (thyroiditis[Text Word])) OR (hashimoto disease[MeSH Terms])) OR (hashimoto[Text Word]))) OR (postpartum thyroiditis[MeSH Terms])) OR (postpartum thyroiditis[Text Word])) OR (thyroiditis, subacute[MeSH Terms])) OR (thyroiditis, subacute[Text Word])) OR (subacute thyroiditis[Text Word])) OR (subacute thyroiditis[Text Word])) OR (thyroiditis, suppurative[MeSH Terms])"
-        else:
-            raise ValueError
-
     def RetrieveArticles(self):
         driver = webdriver.Chrome(service=self.service, options=self.options)
         driver.implicitly_wait(0.2)
@@ -72,20 +57,37 @@ class Pubmed:
         while year_range[1] <= datetime.now().year+2:
 
             driver.get(re.sub(r"dates.\d{4}%2F1%2F1-\d{4}", f"dates.{year_range[0]}%2F1%2F1-{year_range[1]}", self.url))
-            self._SeleniumActions(driver)
+            try:
+                self._SeleniumActions(driver)
+                year_range = [x+2 for x in year_range]
+            except ElementClickInterceptedException as error:
+                print(error)
+                print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
+                driver.refresh()
+            except ElementNotInteractableException as error:
+                print(error)
+                print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
+                driver.refresh()
+            except NoSuchElementException as error:
+                print(error)
+                print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
+                driver.refresh()
 
-            year_range = [x+2 for x in year_range]
-
-        time.sleep(10)
+        time.sleep(30)
         driver.quit()
+
+        file_count = len([entry for entry in os.listdir(self.directory) if os.path.isfile(os.path.join(self.directory, entry))])
+        if file_count < 12:
+            print(f"Missing articles for object with uid: {self.uid}, pathologie: {self.pathologie}, new try.")
+            self.RetrieveArticles()
 
         self.final_dataframe = self._UnifyFiles()
 
         shutil.rmtree(self.directory)
 
-        if self.final_dataframe.shape[0] < total_results:
-            print(f"Missing articles for object with uid: {self.uid}, pathologie: {self.pathologie}, new try.")
-            self.RetrieveArticles()
+        # if self.final_dataframe.shape[0] < total_results:
+        #     print(f"Missing articles for object with uid: {self.uid}, pathologie: {self.pathologie}, new try.")
+        #     self.RetrieveArticles()
 
     @staticmethod
     def _SeleniumActions(_driver):
@@ -164,3 +166,28 @@ class Pubmed:
             dataframe_list.append(df)
 
         return dataframe_list
+
+    @staticmethod
+    def MeshTermsSelection(pathologie: str):
+        pathologie = pathologie.lower().strip()
+
+        if pathologie == "hyperthyroidie":
+            return "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])"
+        elif pathologie == "hypothyroidie":
+            return "(((((((((((hypothyroidism[MeSH Terms]) OR (hypothyroidism[Text Word])) OR (congenital hypothyroidism[MeSH Terms])) OR (cretinism[Text Word])) OR (congenital iodine deficiency syndrome[Text Word])) OR (lingual thyroid[MeSH Terms])) OR (thyroid dysgenesis[Text Word])) OR (lingual thyroid[Text Word])) OR (thyroid lingual[Text Word])) OR (lingual goiter[MeSH Terms])) OR (lingual goiter[Text Word])) OR (goiter lingual[Text Word])"
+        elif pathologie == "goitre":
+            return "((goiter[MeSH Terms]) OR (goiter[Text Word]) OR (goiters[Text Word])) OR ((goiter, nodular[MeSH Terms]) OR (nodular goiters[Text Word]) OR (nodular goiter[Text Word]) OR (goiter, nodular[Text Word]))"
+        elif pathologie == "thyroidites":
+            return "(((((((((((thyroiditis, autoimmune[MeSH Terms]) OR (thyroiditis[Text Word])) OR (hashimoto disease[MeSH Terms])) OR (hashimoto[Text Word]))) OR (postpartum thyroiditis[MeSH Terms])) OR (postpartum thyroiditis[Text Word])) OR (thyroiditis, subacute[MeSH Terms])) OR (thyroiditis, subacute[Text Word])) OR (subacute thyroiditis[Text Word])) OR (subacute thyroiditis[Text Word])) OR (thyroiditis, suppurative[MeSH Terms])"
+        elif pathologie == "thyroid neoplasm":
+            return "(((((((((thyroid neoplasms[MeSH Terms]) OR (thyroid neoplasms[Text Word])) OR (thyroid neoplasm[Text Word])) OR (thyroid cancer[Text Word])) OR (thyroid carcinoma[Text Word])) OR (thyroid cancers[Text Word])) OR (cancer of thyroid[Text Word])) OR (cancer of the thyroid[Text Word])) OR (thyroid carcinomas[Text Word])) OR (thyroid carcinoma, anaplastic[MeSH Terms])"
+        elif pathologie == "euthyroid sick syndromes":
+            return "(euthyroid sick syndromes[MeSH Terms] OR euthyroid sick syndrome[Text Word] OR low t3 syndrome[Text Word] OR euthyroid sick syndromes[Text Word] OR low t3 low t4 syndrome[Text Word] OR syndrome non thyroidal illness[Text Word] OR high t4 syndrome[Text Word] OR low t3 and low t4 syndrome[Text Word] OR sick euthyroid syndrome[Text Word] OR non-thyroidal illness syndrome[Text Word] OR low t3 low t4 syndrome[Text Word] OR non-thyroidal illness syndrome[Text Word])"
+        elif pathologie == "hyperthyroxinemia":
+            return "(hyperthyroxinemia[MeSH Terms] OR hyperthyroxinemias[Text Word] OR hyperthyroxinemia[Text Word] OR thyroid hormone resistance syndrome[MeSH Terms] OR thyroid hormone resistance syndrome[Text Word] OR generalized resistance to thyroid hormone[Text Word] OR hyperthyroxinemia, familial dysalbuminemic[MeSH Terms]))"
+        elif pathologie == "thyroid nodule":
+            return "(((((thyroid nodule[MH] OR (nodules, thyroid[TW] OR thyroid nodules[TW] OR thyroid nodule[TW] OR nodule, thyroid[TW]))))) OR ((thyroid nodule[MH] OR (nodules, thyroid[TW] OR thyroid nodules[TW] OR thyroid nodule[TW] OR nodule, thyroid[TW]))))"
+        elif pathologie == "thyroid disease":
+            return "(((((thyroid diseases[MH] OR (thyroid disease[TW] OR disease, thyroid[TW] OR diseases, thyroid[TW] OR thyroid diseases[TW]))))) OR ((thyroid diseases[MH] OR (thyroid disease[TW] OR disease, thyroid[TW] OR diseases, thyroid[TW] OR thyroid diseases[TW]))))"
+        else:
+            raise ValueError
