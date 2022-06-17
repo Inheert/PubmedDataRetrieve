@@ -5,10 +5,10 @@ class PubmedGroup:
     directory = f"{os.path.abspath(os.curdir)}/data"
     col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical"]
 
-    def __init__(self, pathologies: list):
+    def __init__(self, pathologies: list, filters: list = None):
 
         self.dataframes = {}
-        self.pathologies = [Pubmed(x) for x in pathologies]
+        self.pathologies = [Pubmed(x, filters) for x in pathologies]
         self.threading = [threading.Thread(target=obj.RetrieveArticles) for obj in self.pathologies]
 
     def StartRetrieve(self):
