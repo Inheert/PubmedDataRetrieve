@@ -1,19 +1,4 @@
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import ElementClickInterceptedException, ElementNotInteractableException, NoSuchElementException
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-import os
-import shutil
-import platform
-import glob
-import time
-from uuid import uuid4
-import pandas as pd
-from datetime import datetime
-import re
+from modules import *
 
 class Pubmed:
 
@@ -61,15 +46,15 @@ class Pubmed:
                 self._SeleniumActions(driver)
                 year_range = [x+2 for x in year_range]
             except ElementClickInterceptedException as error:
-                print(error)
+                print(str(error).split("Stacktrace:")[0])
                 print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
                 driver.refresh()
             except ElementNotInteractableException as error:
-                print(error)
+                print(str(error).split("Stacktrace:")[0])
                 print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
                 driver.refresh()
             except NoSuchElementException as error:
-                print(error)
+                print(str(error).split("Stacktrace:")[0])
                 print(f"Error from {self.uid}, pathologie: {self.pathologie}, new try.\n\n")
                 driver.refresh()
 
