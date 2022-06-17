@@ -1,6 +1,16 @@
 from modules import *
 
+"""
+Revoir le problème concernant le délai entre chaque action selenium IMPORTAAAAAAAAAAAAAAAAAAAAAAAAAAANT
 
+-
+$-
+-
+
+-
+-
+
+"""
 class Pubmed:
     all_tag = ["PMID", "OWN", "STAT", "DCOM", "LR", "IS", "VI", "DP", "TI", "PG", "LID", "AB", "CI", "FAU",
                "AU", "AD", "LA", "PT", "DEP", "PL", "TA", "JT", "JID", "SB", "MH", "OTO", " OT", "EDAT", "MHDA",
