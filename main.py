@@ -11,9 +11,8 @@ Améliorer la gestion probable des erreurs :
 # first = Pubmed("hyperthyroidie")
 # first.RetrieveArticles()
 
-test = PubmedGroup(pathologies=["Hyperthyroidie", "Hypothyroidie", "goitre", "thyroidites", "Euthyroid sick syndromes",
-                    "Hyperthyroxinemia", "Thyroid neoplasm", "Thyroid nodule", "Thyroid disease"],
-                   filters=["humans"], delay=0.5, threadingObject=5)
+test = PubmedGroup(pathologies=["goitre", "thyroidites", "thyroid nodule"],
+                   filters=["humans"], threadingObject=5, delay=0.5)
 test.StartRetrieve()
 test.JoinAndCleanDataframe()
 print(test.dataframes)

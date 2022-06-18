@@ -25,7 +25,7 @@ class Pubmed:
         driver.implicitly_wait(0.5)
 
         driver.get(self.url)
-
+        print("get")
         total_results = int(driver.find_element(by=By.CLASS_NAME, value="value").text.replace(",", ""))
         articles_files_count = 0
         year_range = [2000, 2001]
@@ -187,12 +187,7 @@ class Pubmed:
         self.dataframes = pd.DataFrame()
         self.delay = delay
         self.default_pathologies = {
-            "hyperthyroidie": "%28%28%28%28%28%28%28%28%28%28hyperthyroidism%5BMeSH+Terms%5D%29+OR+%28hyperthyroidism%5BText" \
-                              "+Word%5D%29%29+OR+%28hyperthyroid%5BText+Word%5D%29%29+OR+%28graves+disease%5BMeSH+Terms%5D%29%29" \
-                              "+OR+%28graves+disease%5BText+Word%5D%29%29+OR+%28basedow%5BText+Word%5D%29%29+OR" \
-                              "+%28thyrotoxicosis%5BMeSH+Terms%5D%29%29+OR+%28thyrotoxicosis%5BText+Word%5D%29%29+OR+%28thyroid" \
-                              "+crisis%5BText+Word%5D%29%29+OR+%28crisis+thyroid%5BText+Word%5D%29%29+OR+%28thyroid+crisis" \
-                              "%5BMeSH+Terms%5D%29",
+            "hyperthyroidie": "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])",
             "hypothyroidie": "%28%28%28%28%28%28%28%28%28%28%28hypothyroidism%5BMeSH+Terms%5D%29+OR+%28hypothyroidism%5BText+Word%5D%29%29+OR+%28congenital+hypothyroidism%5BMeSH+Terms%5D%29%29+OR+%28cretinism%5BText+Word%5D%29%29+OR+%28%22congenital+iodine+deficiency+syndrome%22%5BText+Word%5D%29%29+OR+%28lingual+thyroid%5BMeSH+Terms%5D%29%29+OR+%28%22thyroid+dysgenesis%22%5BText+Word%5D%29%29+OR+%28%22lingual+thyroid%22%5BText+Word%5D%29%29+OR+%28%22thyroid+lingual%22%5BText+Word%5D%29%29+OR+%28lingual+goiter%5BMeSH+Terms%5D%29%29+OR+%28%22lingual+goiter%22%5BText+Word%5D%29%29+OR+%28%22goiter+lingual%22%5BText+Word%5D%29",
             "goitre": "%28%28goiter%5BMeSH+Terms%5D%29+OR+%28goiter%5BText+Word%5D%29+OR+%28goiters%5BText+Word%5D%29%29+OR+%28%28goiter%2C+nodular%5BMeSH+Terms%5D%29+OR+%28%22nodular+goiters%22%5BText+Word%5D%29+OR+%28%22nodular+goiter%22%5BText+Word%5D%29+OR+%28%22goiter%2C+nodular%22%5BText+Word%5D%29%29",
             "thyroidites": "%28%28%28%28%28%28%28%28%28%28%28thyroiditis%2C+autoimmune%5BMeSH+Terms%5D%29+OR+%28thyroiditis%5BText+Word%5D%29%29+OR+%28hashimoto+disease%5BMeSH+Terms%5D%29%29+OR+%28hashimoto%5BText+Word%5D%29%29%29+OR+%28postpartum+thyroiditis%5BMeSH+Terms%5D%29%29+OR+%28%22postpartum+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+subacute%5BMeSH+Terms%5D%29%29+OR+%28%22thyroiditis%2C+subacute%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+suppurative%5BMeSH+Terms%5D%29",
@@ -204,8 +199,7 @@ class Pubmed:
         }
 
     def __InitializeURL__(self, filters: list):
-        url = f"https://pubmed.ncbi.nlm.nih.gov/?term={self.default_pathologies[self.pathologie if self.pathologie in self.default_pathologies.keys() else self.pathologie]}&filter=dates.2000%2F1%2F1-{datetime.now().year}%2F12%2F31 "
-
+        url = "https://pubmed.ncbi.nlm.nih.gov/?term=" + str(self.default_pathologies[self.pathologie]).replace(' ', '') + "&filter=dates.2000%2F1%2F1-" + str(datetime.now().year) + "%2F12%2F31"
         valid_filter = {"humans": "hum_ani.humans",
                         "abstract": "simsearch1.fha",
                         "free full text": "simsearch2.ffrft",
@@ -230,6 +224,8 @@ class Pubmed:
 
                 url += f"&filter={valid_filter[value]}"
 
+        url = str(url)
+        print(str(url))
         self.url = url
 
     def __InitializeSelenium__(self):

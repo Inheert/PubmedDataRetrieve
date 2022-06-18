@@ -8,10 +8,9 @@ class PubmedGroup:
     def __init__(self, pathologies: list, filters: list = None, threadingObject: int = 3, delay: float = 1):
 
         self.dataframes = {}
-        self.PubmedObject = [Pubmed(x, filters) for x in pathologies]
+        self.PubmedObject = [Pubmed(x, filters, delay) for x in pathologies]
         self.threading = [threading.Thread(target=obj.RetrieveArticles) for obj in self.PubmedObject]
         self.threadingObject = threadingObject
-        self.delay = delay
 
     def StartRetrieve(self):
 
@@ -19,7 +18,6 @@ class PubmedGroup:
 
         count = 0
         thread = []
-
         for obj in self.threading:
             if count < self.threadingObject:
                 thread.append(obj)
@@ -29,6 +27,9 @@ class PubmedGroup:
                 count = 0
                 thread = [obj]
             count += 1
+
+        if len(thread) > 1:
+            threading_split.append(thread)
 
         print(datetime.now())
         for sub_list in threading_split:
