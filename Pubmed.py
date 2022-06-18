@@ -1,20 +1,9 @@
 from modules import *
 
 class Pubmed:
-    all_tag = ["PMID", "OWN", "STAT", "DCOM", "LR", "IS", "VI", "DP", "TI", "PG", "LID", "AB", "CI", "FAU",
-               "AU", "AD", "LA", "PT", "DEP", "PL", "TA", "JT", "JID", "SB", "MH", "OTO", " OT", "EDAT", "MHDA",
-               "CRDT", "PHST", "AID", "PST", "SO"]
-
-    valid_tag = ["AB", "AD", "AID", "DP", "FAU", "IR", "JT", "MH", "OT", "PL", "PMID", "PT", "RN", "TI"]
-
-    tag_translation = {"AB": "Abstract", "AD": "Affiliation", "AID": "Article_identifier",
-                       "DP": "Publication_date", "FAU": "Full_author_name", "IR": "Investigator",
-                       "JT": "Full_journal", "MH": "Mesh_terms", "OT": "Other_term",
-                       "PL": "Place_of_publication", "PMID": "PMID", "PT": "Publication_type",
-                       "RN": "Chemical", "TI": "Title"}
 
     # Ajouter les filtres pubmed en argument
-    def __init__(self, pathologie: str, filters: list = None, delay: float = 1):
+    def __init__(self, pathologie: str = None, filters: list = None, delay: float = 1):
 
         self.__InitializeObjectVariables__(pathologie, delay)
         self.__InitializeURL__(filters)
@@ -186,31 +175,9 @@ class Pubmed:
         self.pathologie = pathologie
         self.dataframes = pd.DataFrame()
         self.delay = delay
-        self.default_pathologies = {
-            "hyperthyroidie": "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])",
-            "hypothyroidie": "%28%28%28%28%28%28%28%28%28%28%28hypothyroidism%5BMeSH+Terms%5D%29+OR+%28hypothyroidism%5BText+Word%5D%29%29+OR+%28congenital+hypothyroidism%5BMeSH+Terms%5D%29%29+OR+%28cretinism%5BText+Word%5D%29%29+OR+%28%22congenital+iodine+deficiency+syndrome%22%5BText+Word%5D%29%29+OR+%28lingual+thyroid%5BMeSH+Terms%5D%29%29+OR+%28%22thyroid+dysgenesis%22%5BText+Word%5D%29%29+OR+%28%22lingual+thyroid%22%5BText+Word%5D%29%29+OR+%28%22thyroid+lingual%22%5BText+Word%5D%29%29+OR+%28lingual+goiter%5BMeSH+Terms%5D%29%29+OR+%28%22lingual+goiter%22%5BText+Word%5D%29%29+OR+%28%22goiter+lingual%22%5BText+Word%5D%29",
-            "goitre": "%28%28goiter%5BMeSH+Terms%5D%29+OR+%28goiter%5BText+Word%5D%29+OR+%28goiters%5BText+Word%5D%29%29+OR+%28%28goiter%2C+nodular%5BMeSH+Terms%5D%29+OR+%28%22nodular+goiters%22%5BText+Word%5D%29+OR+%28%22nodular+goiter%22%5BText+Word%5D%29+OR+%28%22goiter%2C+nodular%22%5BText+Word%5D%29%29",
-            "thyroidites": "%28%28%28%28%28%28%28%28%28%28%28thyroiditis%2C+autoimmune%5BMeSH+Terms%5D%29+OR+%28thyroiditis%5BText+Word%5D%29%29+OR+%28hashimoto+disease%5BMeSH+Terms%5D%29%29+OR+%28hashimoto%5BText+Word%5D%29%29%29+OR+%28postpartum+thyroiditis%5BMeSH+Terms%5D%29%29+OR+%28%22postpartum+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+subacute%5BMeSH+Terms%5D%29%29+OR+%28%22thyroiditis%2C+subacute%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+suppurative%5BMeSH+Terms%5D%29",
-            "thyroid neoplasm": "%28%28%28%28%28%28%28%28%28thyroid+neoplasms%5BMeSH+Terms%5D%29+OR+%28thyroid+neoplasms%5BText+Word%5D%29%29+OR+%28thyroid+neoplasm%5BText+Word%5D%29%29+OR+%28thyroid+cancer%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%5BText+Word%5D%29%29+OR+%28thyroid+cancers%5BText+Word%5D%29%29+OR+%28cancer+of+thyroid%5BText+Word%5D%29%29+OR+%28cancer+of+the+thyroid%5BText+Word%5D%29%29+OR+%28thyroid+carcinomas%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%2C+anaplastic%5BMeSH+Terms%5D%29",
-            "euthyroid sick syndromes": "%28%22euthyroid+sick+syndromes%22%5BMeSH+Terms%5D+OR+%22euthyroid+sick+syndrome%22%5BText+Word%5D+OR+%22low+t3+syndrome%22%5BText+Word%5D+OR+%22euthyroid+sick+syndromes%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22syndrome+non+thyroidal+illness%22%5BText+Word%5D+OR+%22high+t4+syndrome%22%5BText+Word%5D+OR+%22low+t3+and+low+t4+syndrome%22%5BText+Word%5D+OR+%22sick+euthyroid+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D%29",
-            "hyperthyroxinemia": "%28%22hyperthyroxinemia%22%5BMeSH+Terms%5D+OR+%22hyperthyroxinemias%22%5BText+Word%5D+OR+%22hyperthyroxinemia%22%5BText+Word%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BMeSH+Terms%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BText+Word%5D+OR+%22generalized+resistance+to+thyroid+hormone%22%5BText+Word%5D+OR+%22hyperthyroxinemia%2C+familial+dysalbuminemic%22%5BMeSH+Terms%5D%29%29",
-            "thyroid nodule": "%28%28%28%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29",
-            "thyroid disease": "%28%28%28%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29",
-        }
 
     def __InitializeURL__(self, filters: list):
-        url = "https://pubmed.ncbi.nlm.nih.gov/?term=" + str(self.default_pathologies[self.pathologie]).replace(' ', '') + "&filter=dates.2000%2F1%2F1-" + str(datetime.now().year) + "%2F12%2F31"
-        valid_filter = {"humans": "hum_ani.humans",
-                        "abstract": "simsearch1.fha",
-                        "free full text": "simsearch2.ffrft",
-                        "full text": "simsearch3.fft",
-                        "associated data": "articleattr.data",
-                        "books and documents": "pubt.booksdocs",
-                        "clinical trial": "pubt.clinicaltrial",
-                        "meta-analysis": "pubt.meta-analysis",
-                        "randomized controlled trial": "pubt.randomizedcontrolledtrial",
-                        "review": "pubt.review",
-                        "systematic review": "pubt.systematicreview"}
+        url = f"https://pubmed.ncbi.nlm.nih.gov/?term={Pubmed.default_pathologies[self.pathologie] if self.pathologie in Pubmed.default_pathologies.keys() else self.pathologie}&filter=dates.2000%2F1%2F1-{str(datetime.now().year)}%2F12%2F31"
 
         if filters is None:
             pass
@@ -219,13 +186,12 @@ class Pubmed:
             for value in filters:
                 value = str(value).lower().strip()
 
-                if value not in valid_filter.keys():
+                if value not in Pubmed.valid_filter.keys():
                     raise ValueError
 
-                url += f"&filter={valid_filter[value]}"
+                url += f"&filter={Pubmed.valid_filter[value]}"
 
-        url = str(url)
-        print(str(url))
+        print(url)
         self.url = url
 
     def __InitializeSelenium__(self):
@@ -236,3 +202,38 @@ class Pubmed:
         prefs = {"download.default_directory": self.directory}
         self.options.add_experimental_option("prefs", prefs)
 
+    all_tag = ["PMID", "OWN", "STAT", "DCOM", "LR", "IS", "VI", "DP", "TI", "PG", "LID", "AB", "CI", "FAU",
+               "AU", "AD", "LA", "PT", "DEP", "PL", "TA", "JT", "JID", "SB", "MH", "OTO", " OT", "EDAT", "MHDA",
+               "CRDT", "PHST", "AID", "PST", "SO"]
+
+    valid_tag = ["AB", "AD", "AID", "DP", "FAU", "IR", "JT", "MH", "OT", "PL", "PMID", "PT", "RN", "TI"]
+
+    tag_translation = {"AB": "Abstract", "AD": "Affiliation", "AID": "Article_identifier",
+                       "DP": "Publication_date", "FAU": "Full_author_name", "IR": "Investigator",
+                       "JT": "Full_journal", "MH": "Mesh_terms", "OT": "Other_term",
+                       "PL": "Place_of_publication", "PMID": "PMID", "PT": "Publication_type",
+                       "RN": "Chemical", "TI": "Title"}
+
+    default_pathologies = {
+        "hyperthyroidie": "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])",
+        "hypothyroidie": "%28%28%28%28%28%28%28%28%28%28%28hypothyroidism%5BMeSH+Terms%5D%29+OR+%28hypothyroidism%5BText+Word%5D%29%29+OR+%28congenital+hypothyroidism%5BMeSH+Terms%5D%29%29+OR+%28cretinism%5BText+Word%5D%29%29+OR+%28%22congenital+iodine+deficiency+syndrome%22%5BText+Word%5D%29%29+OR+%28lingual+thyroid%5BMeSH+Terms%5D%29%29+OR+%28%22thyroid+dysgenesis%22%5BText+Word%5D%29%29+OR+%28%22lingual+thyroid%22%5BText+Word%5D%29%29+OR+%28%22thyroid+lingual%22%5BText+Word%5D%29%29+OR+%28lingual+goiter%5BMeSH+Terms%5D%29%29+OR+%28%22lingual+goiter%22%5BText+Word%5D%29%29+OR+%28%22goiter+lingual%22%5BText+Word%5D%29",
+        "goitre": "%28%28goiter%5BMeSH+Terms%5D%29+OR+%28goiter%5BText+Word%5D%29+OR+%28goiters%5BText+Word%5D%29%29+OR+%28%28goiter%2C+nodular%5BMeSH+Terms%5D%29+OR+%28%22nodular+goiters%22%5BText+Word%5D%29+OR+%28%22nodular+goiter%22%5BText+Word%5D%29+OR+%28%22goiter%2C+nodular%22%5BText+Word%5D%29%29",
+        "thyroidites": "%28%28%28%28%28%28%28%28%28%28%28thyroiditis%2C+autoimmune%5BMeSH+Terms%5D%29+OR+%28thyroiditis%5BText+Word%5D%29%29+OR+%28hashimoto+disease%5BMeSH+Terms%5D%29%29+OR+%28hashimoto%5BText+Word%5D%29%29%29+OR+%28postpartum+thyroiditis%5BMeSH+Terms%5D%29%29+OR+%28%22postpartum+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+subacute%5BMeSH+Terms%5D%29%29+OR+%28%22thyroiditis%2C+subacute%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+suppurative%5BMeSH+Terms%5D%29",
+        "thyroid neoplasm": "%28%28%28%28%28%28%28%28%28thyroid+neoplasms%5BMeSH+Terms%5D%29+OR+%28thyroid+neoplasms%5BText+Word%5D%29%29+OR+%28thyroid+neoplasm%5BText+Word%5D%29%29+OR+%28thyroid+cancer%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%5BText+Word%5D%29%29+OR+%28thyroid+cancers%5BText+Word%5D%29%29+OR+%28cancer+of+thyroid%5BText+Word%5D%29%29+OR+%28cancer+of+the+thyroid%5BText+Word%5D%29%29+OR+%28thyroid+carcinomas%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%2C+anaplastic%5BMeSH+Terms%5D%29",
+        "euthyroid sick syndromes": "%28%22euthyroid+sick+syndromes%22%5BMeSH+Terms%5D+OR+%22euthyroid+sick+syndrome%22%5BText+Word%5D+OR+%22low+t3+syndrome%22%5BText+Word%5D+OR+%22euthyroid+sick+syndromes%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22syndrome+non+thyroidal+illness%22%5BText+Word%5D+OR+%22high+t4+syndrome%22%5BText+Word%5D+OR+%22low+t3+and+low+t4+syndrome%22%5BText+Word%5D+OR+%22sick+euthyroid+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D%29",
+        "hyperthyroxinemia": "%28%22hyperthyroxinemia%22%5BMeSH+Terms%5D+OR+%22hyperthyroxinemias%22%5BText+Word%5D+OR+%22hyperthyroxinemia%22%5BText+Word%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BMeSH+Terms%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BText+Word%5D+OR+%22generalized+resistance+to+thyroid+hormone%22%5BText+Word%5D+OR+%22hyperthyroxinemia%2C+familial+dysalbuminemic%22%5BMeSH+Terms%5D%29%29",
+        "thyroid nodule": "%28%28%28%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29",
+        "thyroid disease": "%28%28%28%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29",
+    }
+
+    valid_filter = {"humans": "hum_ani.humans",
+                    "abstract": "simsearch1.fha",
+                    "free full text": "simsearch2.ffrft",
+                    "full text": "simsearch3.fft",
+                    "associated data": "articleattr.data",
+                    "books and documents": "pubt.booksdocs",
+                    "clinical trial": "pubt.clinicaltrial",
+                    "meta-analysis": "pubt.meta-analysis",
+                    "randomized controlled trial": "pubt.randomizedcontrolledtrial",
+                    "review": "pubt.review",
+                    "systematic review": "pubt.systematicreview"}

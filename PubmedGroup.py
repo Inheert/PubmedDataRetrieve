@@ -9,7 +9,7 @@ class PubmedGroup:
 
         self.dataframes = {}
         self.PubmedObject = [Pubmed(x, filters, delay) for x in pathologies]
-        self.threading = [threading.Thread(target=obj.RetrieveArticles) for obj in self.PubmedObject]
+        self.threading_list = [threading.Thread(target=obj.RetrieveArticles) for obj in self.PubmedObject]
         self.threadingObject = threadingObject
 
     def StartRetrieve(self):
@@ -18,7 +18,7 @@ class PubmedGroup:
 
         count = 0
         thread = []
-        for obj in self.threading:
+        for obj in self.threading_list:
             if count < self.threadingObject:
                 thread.append(obj)
 
@@ -28,7 +28,7 @@ class PubmedGroup:
                 thread = [obj]
             count += 1
 
-        if len(thread) > 1:
+        if len(thread) >= 1:
             threading_split.append(thread)
 
         print(datetime.now())
@@ -82,3 +82,17 @@ class PubmedGroup:
             self.dataframes[column] = dataframe[["PMID", column]].explode(column)
             self.dataframes[column].to_csv(f"{PubmedGroup.directory}/{column}.csv")
 
+    def GetInfos(self):
+        str_pathos = ""
+        for patho in Pubmed.default_pathologies.keys():
+            str_pathos += f", {patho}"
+
+        str_filters = ""
+        for filter in Pubmed.valid_filter:
+            str_filters += f", {filter}"
+
+        print(f"Total instance: {len(self.threading_list)}")
+        print(f"Threading count: {self.threadingObject}")
+        print("")
+        print(f"Default pathologies: {str_pathos}")
+        print(f"available filters: {str_filters}")
