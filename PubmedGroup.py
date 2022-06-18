@@ -5,11 +5,13 @@ class PubmedGroup:
     directory = f"{os.path.abspath(os.curdir)}/data"
     col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical"]
 
-    def __init__(self, pathologies: list, filters: list = None):
+    def __init__(self, pathologies: list, filters: list = None, threadingObject: int = 3, delay: float = 1):
 
         self.dataframes = {}
-        self.pathologies = [Pubmed(x, filters) for x in pathologies]
-        self.threading = [threading.Thread(target=obj.RetrieveArticles) for obj in self.pathologies]
+        self.PubmedObject = [Pubmed(x, filters) for x in pathologies]
+        self.threading = [threading.Thread(target=obj.RetrieveArticles) for obj in self.PubmedObject]
+        self.threadingObject = threadingObject
+        self.delay = delay
 
     def StartRetrieve(self):
 
@@ -17,10 +19,12 @@ class PubmedGroup:
 
         count = 0
         thread = []
+
         for obj in self.threading:
-            if count < 3:
+            if count < self.threadingObject:
                 thread.append(obj)
-            elif count == 3:
+
+            elif count == self.threadingObject:
                 threading_split.append(thread)
                 count = 0
                 thread = [obj]
@@ -37,7 +41,7 @@ class PubmedGroup:
     def JoinAndCleanDataframe(self):
 
         final_df = None
-        dataframe_list = [df.final_dataframe for df in self.pathologies]
+        dataframe_list = [df.dataframes for df in self.PubmedObject]
 
         for df in dataframe_list:
             if final_df is None:
