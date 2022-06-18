@@ -31,6 +31,17 @@ via Pubmed : https://pubmed.ncbi.nlm.nih.gov/advanced/ et de récupérer le rés
 - **ThreadingObject** *(default: 3)*: définis le nombre d'instance qui travailleront simultanèment (une instance = une pathologie).
 - **delay** *(default: 1)*: délai en seconde entre chaque action effectué par Selenium.
 
+Pour accéder aux informations de notre objet Pubmed tel que les pathologies par défaut ou les filtres disponile, il suffit d'utiliser `my_objet.GetInfos()`.
+
+## Ajouter de nouvelles pathologies par défaut
+
+Il est possible d'ajouter de nouvelles pathologies par défaut soit via `Pubmed.default_pathologies` :
+````python
+from Pubmed import Pubmed
+
+Pubmed.default_pathologies["NOM_DE_LA_PATHO"] = "REQUÊTE_DE_LA_PATHO"
+````
+
 ## Exemples
 
 #### exemple 1:
@@ -91,3 +102,22 @@ my_object.StartRetrieve()
 # assemblage des dataframes et créations des fichiers csv
 my_object.JoinAndCleanDataframe()
 ````
+
+#### exemple 5:
+````python
+from Pubmed import Pubmed
+from PubmedGroup import PubmedGroup
+
+# Ajout d'une nouvelle pathologie à la class Pubmed
+Pubmed.default_pathologies["parathyroid diseases"] = "((hyperparathyroidism, primary) OR (primary hyperparathyroidism)) OR (hyperparathyroidism, secondary)"
+
+# Création de l'objet + précision de 3 pathologies pré-enregistrées + utilisation de la patho précèdement ajoutée
+my_object = PubmedGroup(pathologies = ["goitre", "hyperthyroidie", "parathyroid diseases"])
+
+# Lancement de la récupération des données
+my_object.StartRetrieve()
+
+# assemblage des dataframes et créations des fichiers csv
+my_object.JoinAndCleanDataframe()
+````
+
