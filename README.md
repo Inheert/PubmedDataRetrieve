@@ -31,7 +31,7 @@ via Pubmed : https://pubmed.ncbi.nlm.nih.gov/advanced/ et de récupérer le rés
 - **ThreadingObject** *(default: 3)*: définis le nombre d'instance qui travailleront simultanèment (une instance = une pathologie/requête).
 - **delay** *(default: 1)*: délai en seconde entre chaque action effectué par Selenium.
 
-Pour accéder aux informations de notre objet Pubmed tel que les pathologies par défaut ou les filtres disponile, il suffit d'utiliser `my_objet.GetInfos()`.
+Pour accéder aux informations de notre objet Pubmed tel que les pathologies par défaut ou les filtres disponibles, il suffit d'utiliser `my_objet.GetInfos()`.
 
 ## Ajouter de nouvelles pathologies par défaut
 
