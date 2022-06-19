@@ -28,7 +28,7 @@ thyroidites, thyroid neoplasm, euthyroid sick syndromes, hyperthyroxinemia, thyr
 via Pubmed : https://pubmed.ncbi.nlm.nih.gov/advanced/ et de récupérer le résultat dans "query box" :
 ![image](https://user-images.githubusercontent.com/90567698/174417518-efad561e-001d-4bb8-b56e-a5112f42261f.png)
 - **filters** *(default: None)*: permet l'utilisation des différents filtres Pubmed, les noms sont les mêmes que ceux présents sur l'outil de recherche, il est préférable de les écrires en minuscule.
-- **ThreadingObject** *(default: 3)*: définis le nombre d'instance qui travailleront simultanèment (une instance = une pathologie).
+- **ThreadingObject** *(default: 3)*: définis le nombre d'instance qui travailleront simultanèment (une instance = une pathologie/requête).
 - **delay** *(default: 1)*: délai en seconde entre chaque action effectué par Selenium.
 
 Pour accéder aux informations de notre objet Pubmed tel que les pathologies par défaut ou les filtres disponile, il suffit d'utiliser `my_objet.GetInfos()`.
