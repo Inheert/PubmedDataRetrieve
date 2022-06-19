@@ -35,7 +35,7 @@ Pour accéder aux informations de notre objet Pubmed tel que les pathologies par
 
 ## Ajouter de nouvelles pathologies par défaut
 
-Il est possible d'ajouter de nouvelles pathologies par défaut soit via `Pubmed.default_pathologies` :
+Il est possible d'ajouter de nouvelles pathologies par défaut via `Pubmed.default_pathologies` :
 ````python
 from Pubmed import Pubmed
 
