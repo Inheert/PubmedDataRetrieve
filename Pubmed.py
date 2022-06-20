@@ -14,7 +14,6 @@ class Pubmed:
         driver.implicitly_wait(0.5)
 
         driver.get(self.url)
-        print("get")
         total_results = int(driver.find_element(by=By.CLASS_NAME, value="value").text.replace(",", ""))
         articles_files_count = 0
         year_range = [2000, 2001]
@@ -46,7 +45,7 @@ class Pubmed:
 
                 driver.refresh()
 
-        time.sleep(5)
+        time.sleep(30)
         driver.quit()
 
         file_count = len(
@@ -55,11 +54,12 @@ class Pubmed:
         # Après 15 secondes la récupération des articles et relancé
         count = 0
         while file_count < articles_files_count:
+            print(f'{self.pathologie}: {file_count}, {articles_files_count}')
             time.sleep(0.5)
             count += 1
             if count == 50:
                 print("The number of file. is not equal to what he should be, articles retrieve will restart.\n"
-                      "If this problem persist using PubmedGroup class try to reduce threading threadingObject parameters (default = 3\n"
+                      "If this problem persist using PubmedGroup class try to reduce threading threadingObject parameters (default = 3)\n"
                       "Else increase time.sleep or count max from RetrieveArticles Pubmed method.")
                 self.RetrieveArticles()
 
@@ -68,6 +68,7 @@ class Pubmed:
         shutil.rmtree(self.directory)
 
         if self.dataframes.shape[0] < total_results:
+            print(self.dataframes.shape[0], total_results)
             print(f"Missing articles for object with uid: {self.uid}, pathologie: {self.pathologie}, new try.")
             self.RetrieveArticles()
 
@@ -140,12 +141,12 @@ class Pubmed:
 
                     if name_tag not in Pubmed.valid_tag:
                         if name_tag not in Pubmed.all_tag and last_tag in Pubmed.valid_tag:
-                            article_dictionary[last_tag] += f" {name_tag}"
+                            article_dictionary[last_tag] += f" {name_tag.lower()}"
                         else:
                             pass
                     else:
-                        article_dictionary[name_tag] += tag[1] if len(article_dictionary[name_tag]) < 1 else "---" + \
-                                                                                                             tag[1]
+                        article_dictionary[name_tag] += tag[1].lower() if len(article_dictionary[name_tag]) < 1 else "---" + \
+                                                                                                             tag[1].lower()
                         last_tag = name_tag
 
                 for k, v in article_dictionary.items():
@@ -237,3 +238,4 @@ class Pubmed:
                     "randomized controlled trial": "pubt.randomizedcontrolledtrial",
                     "review": "pubt.review",
                     "systematic review": "pubt.systematicreview"}
+
