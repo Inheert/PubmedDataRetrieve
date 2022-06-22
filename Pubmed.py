@@ -201,6 +201,14 @@ class Pubmed:
 
                 for term in terms_list:
 
+                    if term in df.loc[idx, "Title"]:
+                        df.loc[idx, "Condition"].append(term)
+                        pass
+
+                    if term in df.loc[idx, "Abstract"]:
+                        df.loc[idx, "Condition"].append(term)
+                        pass
+
                     for mesh_terms in df.loc[idx, 'Mesh_terms']:
                         mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
                         mesh_term_without_slash = [x.strip() for x in mesh_term_without_slash]
@@ -216,14 +224,6 @@ class Pubmed:
                             df.loc[idx, "Condition"].append(term)
                             break
 
-                    if term in df.loc[idx, "Title"]:
-                        df.loc[idx, "Condition"].append(term)
-                        break
-
-                    if term in df.loc[idx, "Abstract"]:
-                        df.loc[idx, "Condition"].append(term)
-                        break
-
         return df
 
     @staticmethod
@@ -233,6 +233,14 @@ class Pubmed:
         for idx in df.index:
 
             for term in Pubmed.observational_study_characteristics:
+
+                if term in df.loc[idx, "Title"]:
+                    df.loc[idx, "Observational_study_characteristics"].append(term)
+                    pass
+
+                if term in df.loc[idx, "Abstract"]:
+                    df.loc[idx, "Observational_study_characteristics"].append(term)
+                    pass
 
                 for mesh_terms in df.loc[idx, 'Mesh_terms']:
                     mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
@@ -248,14 +256,6 @@ class Pubmed:
                     if term in mesh_term_without_slash:
                         df.loc[idx, "Observational_study_characteristics"].append(term)
                         break
-
-                if term in df.loc[idx, "Title"]:
-                    df.loc[idx, "Observational_study_characteristics"].append(term)
-                    break
-
-                if term in df.loc[idx, "Abstract"]:
-                    df.loc[idx, "Observational_study_characteristics"].append(term)
-                    break
 
         return df
 
