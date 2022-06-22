@@ -3,7 +3,8 @@ from Pubmed import *
 class PubmedGroup:
 
     directory = f"{os.path.abspath(os.curdir)}/data"
-    col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical"]
+    col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical", "Condition",
+                       "Observational_study_characteristics"]
 
     population_terms = ["child", "infant, newborn", "infant", "child, preschool", "postmenopause", "adolescent",
                         "adult", "young adult", "pregnant women", "middle aged", "aged", "aged, 80 and over",
@@ -65,81 +66,50 @@ class PubmedGroup:
                 final_df = df
             final_df = pd.concat([final_df, df])
 
-        final_df = final_df.reset_index(drop=True).drop_duplicates()
-
-        for column in self.col_str_to_list:
-            final_df[column] = final_df[column].apply(lambda x: x.lower().split("---") if isinstance(x, str) else None)
-
-        final_df["PII"] = final_df["Article_identifier"].apply(lambda x: PubmedGroup._DoiOrPii(x, "pii"))
-        final_df["DOI"] = final_df["Article_identifier"].apply(lambda x: PubmedGroup._DoiOrPii(x, "doi"))
-
         self._DataframeSaveAndSplit(final_df, self.col_str_to_list)
 
-    @staticmethod
-    def _DoiOrPii(value_list: list, choice: str):
+    def _DataframeSaveAndSplit(self, dataframe: pd.DataFrame, new_dataframe: list):
 
-        if value_list is None:
-            return None
-
-        choice = choice.lower().strip()
-
-        for identifier in value_list:
-            if choice in identifier:
-                return identifier.replace(f"[{choice}]", "")
-
-        return None
-
-    def _DataframeSaveAndSplit(self, dataframe: pd.Series, new_dataframe: list):
+        dataframe = dataframe.reset_index(drop=True)
 
         self.dataframes["pubmedArticles"] = dataframe
-        self._ArticleClassification()
-        dataframe.to_csv(f"{PubmedGroup.directory}/pubmedArticles.csv")
 
         for column in new_dataframe:
-            self.dataframes[column] = dataframe[["PMID", column]].explode(column)
+            self.dataframes[column] = self.dataframes["pubmedArticles"][["PMID", column]].explode(column)
+            self.dataframes[column] = self.dataframes[column].drop_duplicates()
+            self.dataframes[column] = self.dataframes[column].dropna()
+
+            if column == "Chemical":
+                self.dataframes[column][column] = self.dataframes[column][column].apply(
+                    lambda x: re.findall(r"\(([^)]+)\)", x)[0] if len(re.findall(r"\(([^)]+)\)", x)) != 0 else x)
+            elif column == "Condition":
+                self.dataframes[column]["Category"] = self.dataframes[column][column].apply(lambda x: self._GetCategoryCondition(x))
+
             self.dataframes[column].to_csv(f"{PubmedGroup.directory}/{column}.csv")
 
             self._CreateNewDataframes("population", column)
 
-    def _ArticleClassification(self):
-        df = self.dataframes["pubmedArticles"]
-        df["Condition"] = df.Abstract.apply(lambda x: [])
-        for idx in df.index:
+        self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop(columns=[col for col in PubmedGroup.col_str_to_list])
+        self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop_duplicates()
 
-            for terms_list in PubmedGroup.category.values():
-
-                for term in terms_list:
-
-                    for mesh_terms in df.loc[idx, 'Mesh_terms']:
-                        mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
-
-                        if term in mesh_term_without_slash:
-                            df.loc[idx, "Condition"].append(term)
-                            break
-
-                    if term in df.loc[idx, "Other_term"]:
-                        df.loc[idx, "Condition"].append(term)
-                        break
-
-                    if term in df.loc[idx, "Title"]:
-                        df.loc[idx, "Condition"].append(term)
-                        break
-
-                    if term in df.loc[idx, "Abstract"]:
-                        df.loc[idx, "Condition"].append(term)
-                        break
-
-        self.dataframes["pubmedArticles"] = df
+        self.dataframes["pubmedArticles"].to_csv(f"{PubmedGroup.directory}/pubmedArticles.csv")
 
     def _CreateNewDataframes(self, newCol, column):
         if newCol == "population" and column == "Mesh_terms":
 
             df = self.dataframes["Mesh_terms"].copy()
+
             df["Population"] = df["Mesh_terms"].apply(lambda x: x if x in PubmedGroup.population_terms else None)
             df.dropna(subset="Population", inplace=True)
 
             self.dataframes["Population"] = df[["PMID", "Population"]]
             self.dataframes["Population"].to_csv(f"{PubmedGroup.directory}/{'Population'}.csv")
+
+    @staticmethod
+    def _GetCategoryCondition(pathologie):
+        for k, v in Pubmed.category.items():
+            if pathologie in v:
+                return k
 
     def GetInfos(self):
         str_pathos = ""

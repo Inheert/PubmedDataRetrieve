@@ -1,3 +1,5 @@
+import pandas as pd
+
 from modules import *
 
 class Pubmed:
@@ -15,7 +17,7 @@ class Pubmed:
 
         driver.get(self.url)
         total_results = int(driver.find_element(by=By.CLASS_NAME, value="value").text.replace(",", ""))
-        articles_files_count = 0
+        download_count = 0
         year_range = [2000, 2001]
 
         while year_range[1] <= datetime.now().year + 2:
@@ -26,7 +28,7 @@ class Pubmed:
             try:
                 self._SeleniumActions(driver)
                 year_range = [x + 2 for x in year_range]
-                articles_files_count += 1
+                download_count += 1
 
             except ElementClickInterceptedException as error:
                 print(str(error).split("Stacktrace:")[0])
@@ -45,25 +47,35 @@ class Pubmed:
 
                 driver.refresh()
 
-        time.sleep(30)
-        driver.quit()
-
-        file_count = len(
-            [entry for entry in os.listdir(self.directory) if os.path.isfile(os.path.join(self.directory, entry))])
+        file_count = len([file for file in glob.glob(f"{self.directory}/*.txt")])
 
         # Après 15 secondes la récupération des articles et relancé
         count = 0
-        while file_count < articles_files_count:
-            print(f'{self.pathologie}: {file_count}, {articles_files_count}')
-            time.sleep(0.5)
+        while file_count < download_count:
+            file_count = len([file for file in glob.glob(f"{self.directory}/*.txt")])
+            print(f'{self.pathologie}: {file_count}, {download_count}')
+            time.sleep(1)
             count += 1
-            if count == 50:
+            if count == 120:
                 print("The number of file. is not equal to what he should be, articles retrieve will restart.\n"
                       "If this problem persist using PubmedGroup class try to reduce threading threadingObject parameters (default = 3)\n"
                       "Else increase time.sleep or count max from RetrieveArticles Pubmed method.")
+                shutil.rmtree(self.directory)
+                driver.quit()
+                self.directory = f"{os.path.abspath(os.curdir)}/data/temp/{self.uid}"
+                self.directory = self.directory if platform.system() == "Linux" else self.directory.replace("/", "\\")
                 self.RetrieveArticles()
 
-        self.dataframes = self._UnifyFiles()
+        if self.is_already_done:
+            return None
+
+        driver.quit()
+
+        dataframe = self._UnifyFiles()
+        dataframe = self._DataframeColumnTransformation(dataframe)
+        dataframe = self._ArticlesClassification(dataframe)
+        dataframe = self._ObservationalStudyCharacteristics(dataframe)
+        self.dataframes = dataframe
 
         shutil.rmtree(self.directory)
 
@@ -157,7 +169,96 @@ class Pubmed:
 
         return dataframe_list
 
-#
+    def _DataframeColumnTransformation(self, df: pd.DataFrame):
+        for column in self.col_str_to_list:
+            df[column] = df[column].apply(lambda x: x.lower().split("---") if isinstance(x, str) else x)
+
+        df["PII"] = df["Article_identifier"].apply(lambda x: self._DoiOrPii(x, "pii"))
+        df["DOI"] = df["Article_identifier"].apply(lambda x: self._DoiOrPii(x, "doi"))
+
+        return df
+
+    @staticmethod
+    def _DoiOrPii(value_list: list, choice: str):
+
+        if value_list is None:
+            return None
+
+        choice = choice.lower().strip()
+
+        for identifier in value_list:
+            if choice in identifier:
+                return identifier.replace(f"[{choice}]", "")
+
+        return None
+
+    @staticmethod
+    def _ArticlesClassification(df: pd.DataFrame):
+        df["Condition"] = df.Abstract.apply(lambda x: [])
+        for idx in df.index:
+
+            for terms_list in Pubmed.category.values():
+
+                for term in terms_list:
+
+                    for mesh_terms in df.loc[idx, 'Mesh_terms']:
+                        mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
+                        mesh_term_without_slash = [x.strip() for x in mesh_term_without_slash]
+
+                        if term in mesh_term_without_slash:
+                            df.loc[idx, "Condition"].append(term)
+                            break
+
+                    for mesh_terms in df.loc[idx, "Other_term"]:
+                        mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
+
+                        if term in mesh_term_without_slash:
+                            df.loc[idx, "Condition"].append(term)
+                            break
+
+                    if term in df.loc[idx, "Title"]:
+                        df.loc[idx, "Condition"].append(term)
+                        break
+
+                    if term in df.loc[idx, "Abstract"]:
+                        df.loc[idx, "Condition"].append(term)
+                        break
+
+        return df
+
+    @staticmethod
+    def _ObservationalStudyCharacteristics(df: pd.DataFrame):
+        df["Observational_study_characteristics"] = df.Abstract.apply(lambda x: [])
+
+        for idx in df.index:
+
+            for term in Pubmed.observational_study_characteristics:
+
+                for mesh_terms in df.loc[idx, 'Mesh_terms']:
+                    mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
+                    mesh_term_without_slash = [x.strip() for x in mesh_term_without_slash]
+
+                    if term in mesh_term_without_slash:
+                        df.loc[idx, "Observational_study_characteristics"].append(term)
+                        break
+
+                for mesh_terms in df.loc[idx, "Other_term"]:
+                    mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
+
+                    if term in mesh_term_without_slash:
+                        df.loc[idx, "Observational_study_characteristics"].append(term)
+                        break
+
+                if term in df.loc[idx, "Title"]:
+                    df.loc[idx, "Observational_study_characteristics"].append(term)
+                    break
+
+                if term in df.loc[idx, "Abstract"]:
+                    df.loc[idx, "Observational_study_characteristics"].append(term)
+                    break
+
+        return df
+
 #
 # Les méthodes ci-dessous servent à l'initialisation de l'objet:
 #    - InitializeObjectVariables : ensembles des variables/paramètres
@@ -175,6 +276,7 @@ class Pubmed:
         self.directory = self.directory if platform.system() == "Linux" else self.directory.replace("/", "\\")
         self.pathologie = pathologie
         self.dataframes = pd.DataFrame()
+        self.is_already_done = False
         self.delay = delay
 
     def __InitializeURL__(self, filters: list):
@@ -192,7 +294,6 @@ class Pubmed:
 
                 url += f"&filter={Pubmed.valid_filter[value]}"
 
-        print(url)
         self.url = url
 
     def __InitializeSelenium__(self):
@@ -203,9 +304,12 @@ class Pubmed:
         prefs = {"download.default_directory": self.directory}
         self.options.add_experimental_option("prefs", prefs)
 
-    all_tag = ["PMID", "OWN", "STAT", "DCOM", "LR", "IS", "VI", "DP", "TI", "PG", "LID", "AB", "CI", "FAU",
-               "AU", "AD", "LA", "PT", "DEP", "PL", "TA", "JT", "JID", "SB", "MH", "OTO", " OT", "EDAT", "MHDA",
-               "CRDT", "PHST", "AID", "PST", "SO"]
+    all_tag = ["AB", "AD", "AID", "AU", "BTI", "CI", "CIN", "CN", "COI", "CON", "CP", "CRDT", "CRF", "CRI", "CTDT", "CTI",
+               "DCOM", "DDIN", "DRIN", "DEP", "DP", "DRDT", "ECF", "ECI", "EDAT", "EFR", "EIN", "ED", "EN", "FAU", "FED", "FIR",
+               "FPS", "GN", "GR", "GS", "IP", "IR", "IRAD", "IS", "ISBN", "JID", "JT", "LA", "LID", "LR", "MH", "MHDA",
+               "OAB", "OABL", "OCI", "OID", "ORI", "OT", "OTO", "OWN", "PB", "PG", "PHST", "PL", "PMCR", "PMID", "PS", "PST",
+               "PT", "RF", "RIN", "RN", "ROF", "RPF", "RPI", "RRI", "RRF", "SB", "SFM", "SI", "SO", "SPIN", "STAT", "TA", "TI",
+               "TT", "UIN", "UOF", "VI", "VTI"]
 
     valid_tag = ["AB", "AD", "AID", "DP", "FAU", "IR", "JT", "MH", "OT", "PL", "PMID", "PT", "RN", "TI"]
 
@@ -217,14 +321,15 @@ class Pubmed:
 
     default_pathologies = {
         "hyperthyroidie": "((((((((((hyperthyroidism[MeSH Terms]) OR (hyperthyroidism[Text Word])) OR (hyperthyroid[Text Word])) OR (graves disease[MeSH Terms])) OR (graves disease[Text Word])) OR (basedow[Text Word])) OR (thyrotoxicosis[MeSH Terms])) OR (thyrotoxicosis[Text Word])) OR (thyroid crisis[Text Word])) OR (crisis thyroid[Text Word])) OR (thyroid crisis[MeSH Terms])",
-        "hypothyroidie": "%28%28%28%28%28%28%28%28%28%28%28hypothyroidism%5BMeSH+Terms%5D%29+OR+%28hypothyroidism%5BText+Word%5D%29%29+OR+%28congenital+hypothyroidism%5BMeSH+Terms%5D%29%29+OR+%28cretinism%5BText+Word%5D%29%29+OR+%28%22congenital+iodine+deficiency+syndrome%22%5BText+Word%5D%29%29+OR+%28lingual+thyroid%5BMeSH+Terms%5D%29%29+OR+%28%22thyroid+dysgenesis%22%5BText+Word%5D%29%29+OR+%28%22lingual+thyroid%22%5BText+Word%5D%29%29+OR+%28%22thyroid+lingual%22%5BText+Word%5D%29%29+OR+%28lingual+goiter%5BMeSH+Terms%5D%29%29+OR+%28%22lingual+goiter%22%5BText+Word%5D%29%29+OR+%28%22goiter+lingual%22%5BText+Word%5D%29",
-        "goitre": "%28%28goiter%5BMeSH+Terms%5D%29+OR+%28goiter%5BText+Word%5D%29+OR+%28goiters%5BText+Word%5D%29%29+OR+%28%28goiter%2C+nodular%5BMeSH+Terms%5D%29+OR+%28%22nodular+goiters%22%5BText+Word%5D%29+OR+%28%22nodular+goiter%22%5BText+Word%5D%29+OR+%28%22goiter%2C+nodular%22%5BText+Word%5D%29%29",
-        "thyroidites": "%28%28%28%28%28%28%28%28%28%28%28thyroiditis%2C+autoimmune%5BMeSH+Terms%5D%29+OR+%28thyroiditis%5BText+Word%5D%29%29+OR+%28hashimoto+disease%5BMeSH+Terms%5D%29%29+OR+%28hashimoto%5BText+Word%5D%29%29%29+OR+%28postpartum+thyroiditis%5BMeSH+Terms%5D%29%29+OR+%28%22postpartum+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+subacute%5BMeSH+Terms%5D%29%29+OR+%28%22thyroiditis%2C+subacute%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28%22subacute+thyroiditis%22%5BText+Word%5D%29%29+OR+%28thyroiditis%2C+suppurative%5BMeSH+Terms%5D%29",
-        "thyroid neoplasm": "%28%28%28%28%28%28%28%28%28thyroid+neoplasms%5BMeSH+Terms%5D%29+OR+%28thyroid+neoplasms%5BText+Word%5D%29%29+OR+%28thyroid+neoplasm%5BText+Word%5D%29%29+OR+%28thyroid+cancer%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%5BText+Word%5D%29%29+OR+%28thyroid+cancers%5BText+Word%5D%29%29+OR+%28cancer+of+thyroid%5BText+Word%5D%29%29+OR+%28cancer+of+the+thyroid%5BText+Word%5D%29%29+OR+%28thyroid+carcinomas%5BText+Word%5D%29%29+OR+%28thyroid+carcinoma%2C+anaplastic%5BMeSH+Terms%5D%29",
-        "euthyroid sick syndromes": "%28%22euthyroid+sick+syndromes%22%5BMeSH+Terms%5D+OR+%22euthyroid+sick+syndrome%22%5BText+Word%5D+OR+%22low+t3+syndrome%22%5BText+Word%5D+OR+%22euthyroid+sick+syndromes%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22syndrome+non+thyroidal+illness%22%5BText+Word%5D+OR+%22high+t4+syndrome%22%5BText+Word%5D+OR+%22low+t3+and+low+t4+syndrome%22%5BText+Word%5D+OR+%22sick+euthyroid+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D+OR+%22low+t3+low+t4+syndrome%22%5BText+Word%5D+OR+%22non-thyroidal+illness+syndrome%22%5BText+Word%5D%29",
-        "hyperthyroxinemia": "%28%22hyperthyroxinemia%22%5BMeSH+Terms%5D+OR+%22hyperthyroxinemias%22%5BText+Word%5D+OR+%22hyperthyroxinemia%22%5BText+Word%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BMeSH+Terms%5D+OR+%22thyroid+hormone+resistance+syndrome%22%5BText+Word%5D+OR+%22generalized+resistance+to+thyroid+hormone%22%5BText+Word%5D+OR+%22hyperthyroxinemia%2C+familial+dysalbuminemic%22%5BMeSH+Terms%5D%29%29",
-        "thyroid nodule": "%28%28%28%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+nodule%22%5BMH%5D+OR+%28%22nodules%2C+thyroid%22%5BTW%5D+OR+%22thyroid+nodules%22%5BTW%5D+OR+%22thyroid+nodule%22%5BTW%5D+OR+%22nodule%2C+thyroid%22%5BTW%5D%29%29%29%29",
-        "thyroid disease": "%28%28%28%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29%29+OR+%28%28%22thyroid+diseases%22%5BMH%5D+OR+%28%22thyroid+disease%22%5BTW%5D+OR+%22disease%2C+thyroid%22%5BTW%5D+OR+%22diseases%2C+thyroid%22%5BTW%5D+OR+%22thyroid+diseases%22%5BTW%5D%29%29%29%29",
+        "hypothyroidie": "(((((((((((hypothyroidism[MeSH Terms]) OR (hypothyroidism[Text Word])) OR (congenital hypothyroidism[MeSH Terms])) OR (cretinism[Text Word])) OR (congenital iodine deficiency syndrome[Text Word])) OR (lingual thyroid[MeSH Terms])) OR (thyroid dysgenesis[Text Word])) OR (lingual thyroid[Text Word])) OR (thyroid lingual[Text Word])) OR (lingual goiter[MeSH Terms])) OR (lingual goiter[Text Word])) OR (goiter lingual[Text Word])",
+        "goitre": "((goiter[MeSH Terms]) OR (goiter[Text Word]) OR (goiters[Text Word])) OR ((goiter, nodular[MeSH Terms]) OR (nodular goiters[Text Word]) OR (nodular goiter[Text Word]) OR (goiter, nodular[Text Word]))",
+        "thyroidites": "(((((((((((thyroiditis, autoimmune[MeSH Terms]) OR (thyroiditis[Text Word])) OR (hashimoto disease[MeSH Terms])) OR (hashimoto[Text Word]))) OR (postpartum thyroiditis[MeSH Terms])) OR (postpartum thyroiditis[Text Word])) OR (thyroiditis, subacute[MeSH Terms])) OR (thyroiditis, subacute[Text Word])) OR (subacute thyroiditis[Text Word])) OR (subacute thyroiditis[Text Word])) OR (thyroiditis, suppurative[MeSH Terms])",
+        "thyroid neoplasm": "(((((((((thyroid neoplasms[MeSH Terms]) OR (thyroid neoplasms[Text Word])) OR (thyroid neoplasm[Text Word])) OR (thyroid cancer[Text Word])) OR (thyroid carcinoma[Text Word])) OR (thyroid cancers[Text Word])) OR (cancer of thyroid[Text Word])) OR (cancer of the thyroid[Text Word])) OR (thyroid carcinomas[Text Word])) OR (thyroid carcinoma, anaplastic[MeSH Terms])",
+        "euthyroid sick syndromes": "(euthyroid sick syndromes[MeSH Terms] OR euthyroid sick syndrome[Text Word] OR low t3 syndrome[Text Word] OR euthyroid sick syndromes[Text Word] OR low t3 low t4 syndrome[Text Word] OR syndrome non thyroidal illness[Text Word] OR high t4 syndrome[Text Word] OR low t3 and low t4 syndrome[Text Word] OR sick euthyroid syndrome[Text Word] OR non-thyroidal illness syndrome[Text Word] OR low t3 low t4 syndrome[Text Word] OR non-thyroidal illness syndrome[Text Word])",
+        "hyperthyroxinemia": "(hyperthyroxinemia[MeSH Terms] OR hyperthyroxinemias[Text Word] OR hyperthyroxinemia[Text Word] OR thyroid hormone resistance syndrome[MeSH Terms] OR thyroid hormone resistance syndrome[Text Word] OR generalized resistance to thyroid hormone[Text Word] OR hyperthyroxinemia, familial dysalbuminemic[MeSH Terms]))",
+        "thyroid nodule": "(((((thyroid nodule[MH] OR (nodules, thyroid[TW] OR thyroid nodules[TW] OR thyroid nodule[TW] OR nodule, thyroid[TW]))))) OR ((thyroid nodule[MH] OR (nodules, thyroid[TW] OR thyroid nodules[TW] OR thyroid nodule[TW] OR nodule, thyroid[TW]))))",
+        "parathyroid diseases": "(((((((((((((((((parathyroid diseases[MeSH Terms]) OR (parathyroid diseases[Text Word])) OR (parathyroid disease[Text Word])) OR (parathyroid disorder[Text Word])) OR (parathyroid disorders[Text Word])) OR (hyperparathyroidism[MeSH Terms])) OR (hyperparathyroidism[Text Word])) OR (hypoparathyroidism[MeSH Terms])) OR (hypoparathyroidism[Text Word])) OR (parathyroid neoplasms[MeSH Terms])) OR (parathyroid neoplasms[Text Word])) OR (parathyroid adenoma[Text Word])) OR (parathyroid cancers[Text Word])) OR (parathyroid cancer[Text Word])) OR (parathyroid carcinomas[Text Word])) OR (cancer of parathyroid[Text Word])) OR (parathyroid neoplasm[Text Word])) OR (parathyroid carcinoma[Text Word])",
+        "thyroid disease": "(((((thyroid diseases[MH] OR (thyroid disease[TW] OR disease, thyroid[TW] OR diseases, thyroid[TW] OR thyroid diseases[TW]))))) OR ((thyroid diseases[MH] OR (thyroid disease[TW] OR disease, thyroid[TW] OR diseases, thyroid[TW] OR thyroid diseases[TW]))))",
     }
 
     valid_filter = {"humans": "hum_ani.humans",
@@ -239,3 +344,21 @@ class Pubmed:
                     "review": "pubt.review",
                     "systematic review": "pubt.systematicreview"}
 
+    col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical"]
+
+    category = {
+        "euthyroid sick syndromes": ["euthyroid sick syndromes"],
+        "goiter": ["goiter", "goiter, endemic", "goiter, nodular", "goiter, substernal", "lingual goiter"],
+        "hyperthyroidism": ["hyperthyroidism", "graves disease", "graves' disease", "graves ophthalmopathy", "thyrotoxicosis", "thyroid crisis"],
+        "hyperthyroxinemia": ["hyperthyroxinemia", "hyperthyroxinemia, familial dysalbuminemic", "thyroid hormone resistance syndrome"],
+        "hypothyroidism": ["congenital hypothyroidism", "thyroid dysgenesis", "lingual thyroid", "lingual goiter", "hypothyroidism"],
+        "thyroid neoplasms": ["thyroid neoplasms", "thyroid cancer, papillary", "thyroid carcinoma, anaplastic"],
+        "thyroid nodule": ["thyroid nodule"],
+        "thyroiditis": ["thyroiditis, autoimmune", "hashimoto disease", "postpartum thyroiditis", "thyroiditis, subacute", "thyroiditis, suppurative"],
+        "thyroid disease": ["thyroid disease", "thyroid diseases"]
+    }
+
+    observational_study_characteristics = ["case-control studies", "retrospective studies", "cohort studies", "follow-up studies",
+                                           "longitudinal studies", "prospective studies", "controlled before-after studies", "cross-sectional studies",
+                                           "historically controlled study", "interrupted time series analysis", "case-control", "retrospective", "cohort",
+                                           "longitudinal", "prospective", "cross-sectional"]
