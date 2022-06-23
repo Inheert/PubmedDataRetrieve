@@ -45,6 +45,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/data/Other_term.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/data/Population.csv">
           <value>
             <Attribute>

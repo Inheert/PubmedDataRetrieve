@@ -1,12 +1,15 @@
 from Pubmed import *
 
-class PubmedGroup:
 
+class PubmedGroup:
     directory = f"{os.path.abspath(os.curdir)}/data"
-    col_to_df = ["Full_author_name", "Mesh_terms", "Publication_type", "Chemical", "Condition",
-                       "Observational_study_characteristics"]
+
+    col_to_df = ["Full_author_name", "Mesh_terms", "Other_term", "Publication_type", "Chemical", "Condition",
+                 "Observational_study_characteristics"]
+
     col_to_drop = [x for x in col_to_df]
     col_to_drop.append("Article_identifier")
+    col_to_drop.append("Affiliation")
 
     population_terms = ["child", "infant, newborn", "infant", "child, preschool", "postmenopause", "adolescent",
                         "adult", "young adult", "pregnant women", "middle aged", "aged", "aged, 80 and over",
@@ -15,12 +18,16 @@ class PubmedGroup:
     category = {
         "euthyroid sick syndromes": ["euthyroid sick syndromes"],
         "goiter": ["goiter", "goiter, endemic", "goiter, nodular", "goiter, substernal", "lingual goiter"],
-        "hyperthyroidism": ["hyperthyroidism", "graves disease", "graves' disease", "graves ophthalmopathy", "thyrotoxicosis", "thyroid crisis"],
-        "hyperthyroxinemia": ["hyperthyroxinemia", "hyperthyroxinemia, familial dysalbuminemic", "thyroid hormone resistance syndrome"],
-        "hypothyroidism": ["congenital hypothyroidism", "thyroid dysgenesis", "lingual thyroid", "lingual goiter", "hypothyroidism"],
+        "hyperthyroidism": ["hyperthyroidism", "graves disease", "graves' disease", "graves ophthalmopathy",
+                            "thyrotoxicosis", "thyroid crisis"],
+        "hyperthyroxinemia": ["hyperthyroxinemia", "hyperthyroxinemia, familial dysalbuminemic",
+                              "thyroid hormone resistance syndrome"],
+        "hypothyroidism": ["congenital hypothyroidism", "thyroid dysgenesis", "lingual thyroid", "lingual goiter",
+                           "hypothyroidism"],
         "thyroid neoplasms": ["thyroid neoplasms", "thyroid cancer, papillary", "thyroid carcinoma, anaplastic"],
         "thyroid nodule": ["thyroid nodule"],
-        "thyroiditis": ["thyroiditis, autoimmune", "hashimoto disease", "postpartum thyroiditis", "thyroiditis, subacute", "thyroiditis, suppurative"],
+        "thyroiditis": ["thyroiditis, autoimmune", "hashimoto disease", "postpartum thyroiditis",
+                        "thyroiditis, subacute", "thyroiditis, suppurative"],
         "thyroid disease": ["thyroid disease"]
     }
 
@@ -77,25 +84,27 @@ class PubmedGroup:
         self.dataframes["pubmedArticles"] = dataframe
 
         for column in new_dataframe:
-            self.dataframes[column] = self.dataframes["pubmedArticles"][["PMID", column]].explode(column)
-            self.dataframes[column] = self.dataframes[column].drop_duplicates()
-            self.dataframes[column] = self.dataframes[column].dropna()
+            df = pd.DataFrame(self.dataframes["pubmedArticles"][["PMID", column]].explode(column))
+            df = df.drop_duplicates()
+
+            df[column] = df[column].apply(lambda x: None if x == "" else x)
+            df = df.dropna()
+            print(df.info())
 
             if column == "Chemical":
                 # self.dataframes[column][column] = self.dataframes[column][column].apply(
                 #     lambda x: re.findall(r"\(([^)]+)\)", x)[0] if len(re.findall(r"\(([^)]+)\)", x)) != 0 else x)
-                self.dataframes[column][column] = self.dataframes[column][column].apply(
-                    lambda x: f"{str(x).split('(', maxsplit=1)[1]}" if "(" in x else x)
+                df[column] = df[column].apply(lambda x: f"{str(x).split('(', maxsplit=1)[1]}" if "(" in x else x)
 
-                self.dataframes[column][column] = self.dataframes[column][column].apply(
+                df[column] = df[column].apply(
                     lambda x: x.replace("type i", "type 1") if "type i" in x
                     else x.replace("type ii", "type 2") if "type ii" in x
                     else x.replace("type iii", "type 3") if "type iii" in x
                     else x)
 
             elif column == "Mesh_terms":
-                self.dataframes[column][column] = self.dataframes[column][column].apply(
-                    lambda x: x.replace("type i", "type 1" ) if "type i" in x
+                df[column] = df[column].apply(
+                    lambda x: x.replace("type i", "type 1") if "type i" in x
                     else x.replace("type ii", "type 2") if "type ii" in x
                     else x.replace("type iii", "type 3") if "type iii" in x
                     else x.replace("class i", "class 1") if "class i" in x
@@ -103,24 +112,24 @@ class PubmedGroup:
                     else x.replace("class iii", "class 3") if "class iii" in x
                     else x)
 
-            # elif column == "Full_author_name":
-            #     self.dataframes[column][column] = self.data
-
             elif column == "Condition":
-                self.dataframes[column]["Category"] = self.dataframes[column][column].apply(lambda x: self._GetCategoryCondition(x))
+                df["Category"] = df[column].apply(
+                    lambda x: self._GetCategoryCondition(x))
 
+            self.dataframes[column] = df
             self.dataframes[column].to_csv(f"{PubmedGroup.directory}/{column}.csv")
 
             self._CreateNewDataframes("population", column)
 
         self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop(columns=[col for col in PubmedGroup.col_to_drop])
         self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop_duplicates()
-
+        self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"][["PMID", "PII", "DOI", "Title",
+                                                                               "Publication_date", "Place_of_publication",
+                                                                               "Full_journal", "Investigator", "Abstract"]]
         self.dataframes["pubmedArticles"].to_csv(f"{PubmedGroup.directory}/pubmedArticles.csv")
 
     def _CreateNewDataframes(self, newCol, column):
         if newCol == "population" and column == "Mesh_terms":
-
             df = self.dataframes["Mesh_terms"].copy()
 
             df["Population"] = df["Mesh_terms"].apply(lambda x: x if x in PubmedGroup.population_terms else None)
@@ -137,12 +146,12 @@ class PubmedGroup:
 
     def GetInfos(self):
         str_pathos = ""
-        for patho in Pubmed.default_pathologies.keys():
-            str_pathos += f", {patho}"
+        for pathologie in Pubmed.default_pathologies.keys():
+            str_pathos += f", {pathologie}"
 
         str_filters = ""
-        for filter in Pubmed.valid_filter:
-            str_filters += f", {filter}"
+        for pubmed_filter in Pubmed.valid_filter:
+            str_filters += f", {pubmed_filter}"
 
         print(f"Total instance: {len(self.threading_list)}")
         print(f"Threading count: {self.threadingObject}")
