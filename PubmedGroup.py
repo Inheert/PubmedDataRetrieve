@@ -82,11 +82,13 @@ class PubmedGroup:
             self.dataframes[column] = self.dataframes[column].dropna()
 
             if column == "Chemical":
+                # self.dataframes[column][column] = self.dataframes[column][column].apply(
+                #     lambda x: re.findall(r"\(([^)]+)\)", x)[0] if len(re.findall(r"\(([^)]+)\)", x)) != 0 else x)
                 self.dataframes[column][column] = self.dataframes[column][column].apply(
-                    lambda x: re.findall(r"\(([^)]+)\)", x)[0] if len(re.findall(r"\(([^)]+)\)", x)) != 0 else x)
+                    lambda x: f"{str(x).split('(', maxsplit=1)[1]}" if "(" in x else x)
 
                 self.dataframes[column][column] = self.dataframes[column][column].apply(
-                    lambda x: x.replace("type i", "type 1" ) if "type i" in x
+                    lambda x: x.replace("type i", "type 1") if "type i" in x
                     else x.replace("type ii", "type 2") if "type ii" in x
                     else x.replace("type iii", "type 3") if "type iii" in x
                     else x)
@@ -96,13 +98,13 @@ class PubmedGroup:
                     lambda x: x.replace("type i", "type 1" ) if "type i" in x
                     else x.replace("type ii", "type 2") if "type ii" in x
                     else x.replace("type iii", "type 3") if "type iii" in x
-                    else x.replace("class i", "class 1" ) if "class i" in x
+                    else x.replace("class i", "class 1") if "class i" in x
                     else x.replace("class ii", "class 2") if "class ii" in x
                     else x.replace("class iii", "class 3") if "class iii" in x
                     else x)
 
-            elif column == "Full_author_name":
-                self.dataframes[column][column] = self.data
+            # elif column == "Full_author_name":
+            #     self.dataframes[column][column] = self.data
 
             elif column == "Condition":
                 self.dataframes[column]["Category"] = self.dataframes[column][column].apply(lambda x: self._GetCategoryCondition(x))

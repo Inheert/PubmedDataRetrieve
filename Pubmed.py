@@ -161,7 +161,7 @@ class Pubmed:
                             else:
                                 article_dictionary[last_tag] += f" {name_tag.lower()}"
                         else:
-                            pass
+                            continue
                     elif last_tag == "AD":
                         article_dictionary["FAU"] += "/SPLIT/" + tag[1].lower()
                     else:
@@ -205,17 +205,17 @@ class Pubmed:
         df["Condition"] = df.Abstract.apply(lambda x: [])
         for idx in df.index:
 
-            for terms_list in Pubmed.category.values():
+            for category, terms_list in Pubmed.category.items():
 
                 for term in terms_list:
 
                     if term in df.loc[idx, "Title"]:
                         df.loc[idx, "Condition"].append(term)
-                        pass
+                        continue
 
-                    if term in df.loc[idx, "Abstract"]:
+                    if term in df.loc[idx, "Abstract"] and category != "thyroid disease":
                         df.loc[idx, "Condition"].append(term)
-                        pass
+                        continue
 
                     for mesh_terms in df.loc[idx, 'Mesh_terms']:
                         mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
@@ -244,11 +244,11 @@ class Pubmed:
 
                 if term in df.loc[idx, "Title"]:
                     df.loc[idx, "Observational_study_characteristics"].append(term)
-                    pass
+                    continue
 
                 if term in df.loc[idx, "Abstract"]:
                     df.loc[idx, "Observational_study_characteristics"].append(term)
-                    pass
+                    continue
 
                 for mesh_terms in df.loc[idx, 'Mesh_terms']:
                     mesh_term_without_slash = mesh_terms.replace("*", "").split("/")
@@ -290,10 +290,7 @@ class Pubmed:
     def __InitializeURL__(self, filters: list):
         url = f"https://pubmed.ncbi.nlm.nih.gov/?term={Pubmed.default_pathologies[self.pathologie] if self.pathologie in Pubmed.default_pathologies.keys() else self.pathologie}&filter=dates.2000%2F1%2F1-{str(datetime.now().year)}%2F12%2F31"
 
-        if filters is None:
-            pass
-
-        elif isinstance(filters, list):
+        if isinstance(filters, list):
             for value in filters:
                 value = str(value).lower().strip()
 
