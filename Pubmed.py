@@ -65,6 +65,7 @@ class Pubmed:
                 self.directory = f"{os.path.abspath(os.curdir)}/data/temp/{self.uid}"
                 self.directory = self.directory if platform.system() == "Linux" else self.directory.replace("/", "\\")
                 self.RetrieveArticles()
+                break
 
         if self.is_already_done:
             return None
@@ -72,7 +73,7 @@ class Pubmed:
         driver.quit()
 
         dataframe = self._UnifyFiles()
-        dataframe = self._DataframeColumnTransformation(dataframe)
+        dataframe = self._ArticleIdentifiersSplit(dataframe)
         dataframe = self._ArticlesClassification(dataframe)
         dataframe = self._ObservationalStudyCharacteristics(dataframe)
         self.dataframes = dataframe
@@ -83,6 +84,8 @@ class Pubmed:
             print(self.dataframes.shape[0], total_results)
             print(f"Missing articles for object with uid: {self.uid}, pathologie: {self.pathologie}, new try.")
             self.RetrieveArticles()
+
+        self.is_already_done = True
 
 # Ensemble des actions réalisées par Selenium
     def _SeleniumActions(self, _driver):
@@ -149,13 +152,18 @@ class Pubmed:
                 for tag in article:
                     tag = tag.split("- ")
                     name_tag = tag[0].strip()
-                    last_tag = tag[0].strip() if tag[0].strip() in Pubmed.all_tag else last_tag
+                    last_tag = name_tag if name_tag in Pubmed.all_tag else last_tag
 
                     if name_tag not in Pubmed.valid_tag:
                         if name_tag not in Pubmed.all_tag and last_tag in Pubmed.valid_tag:
-                            article_dictionary[last_tag] += f" {name_tag.lower()}"
+                            if last_tag == "AD":
+                                article_dictionary["FAU"] += f" {name_tag.lower()}"
+                            else:
+                                article_dictionary[last_tag] += f" {name_tag.lower()}"
                         else:
                             pass
+                    elif last_tag == "AD":
+                        article_dictionary["FAU"] += "/SPLIT/" + tag[1].lower()
                     else:
                         article_dictionary[name_tag] += tag[1].lower() if len(article_dictionary[name_tag]) < 1 else "---" + \
                                                                                                              tag[1].lower()
@@ -169,7 +177,7 @@ class Pubmed:
 
         return dataframe_list
 
-    def _DataframeColumnTransformation(self, df: pd.DataFrame):
+    def _ArticleIdentifiersSplit(self, df: pd.DataFrame):
         for column in self.col_str_to_list:
             df[column] = df[column].apply(lambda x: x.lower().split("---") if isinstance(x, str) else x)
 

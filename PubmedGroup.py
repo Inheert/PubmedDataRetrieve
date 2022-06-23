@@ -3,8 +3,10 @@ from Pubmed import *
 class PubmedGroup:
 
     directory = f"{os.path.abspath(os.curdir)}/data"
-    col_str_to_list = ["Article_identifier", "Full_author_name", "Mesh_terms", "Publication_type", "Chemical", "Condition",
+    col_to_df = ["Full_author_name", "Mesh_terms", "Publication_type", "Chemical", "Condition",
                        "Observational_study_characteristics"]
+    col_to_drop = [x for x in col_to_df]
+    col_to_drop.append("Article_identifier")
 
     population_terms = ["child", "infant, newborn", "infant", "child, preschool", "postmenopause", "adolescent",
                         "adult", "young adult", "pregnant women", "middle aged", "aged", "aged, 80 and over",
@@ -66,7 +68,7 @@ class PubmedGroup:
                 final_df = df
             final_df = pd.concat([final_df, df])
 
-        self._DataframeSaveAndSplit(final_df, self.col_str_to_list)
+        self._DataframeSaveAndSplit(final_df, self.col_to_df)
 
     def _DataframeSaveAndSplit(self, dataframe: pd.DataFrame, new_dataframe: list):
 
@@ -99,6 +101,9 @@ class PubmedGroup:
                     else x.replace("class iii", "class 3") if "class iii" in x
                     else x)
 
+            elif column == "Full_author_name":
+                self.dataframes[column][column] = self.data
+
             elif column == "Condition":
                 self.dataframes[column]["Category"] = self.dataframes[column][column].apply(lambda x: self._GetCategoryCondition(x))
 
@@ -106,7 +111,7 @@ class PubmedGroup:
 
             self._CreateNewDataframes("population", column)
 
-        self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop(columns=[col for col in PubmedGroup.col_str_to_list])
+        self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop(columns=[col for col in PubmedGroup.col_to_drop])
         self.dataframes["pubmedArticles"] = self.dataframes["pubmedArticles"].drop_duplicates()
 
         self.dataframes["pubmedArticles"].to_csv(f"{PubmedGroup.directory}/pubmedArticles.csv")
